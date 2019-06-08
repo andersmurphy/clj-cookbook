@@ -1,4 +1,4 @@
-(ns clj-sendgrid-example.core
+(ns sendgrid-example.core
   (:require [clj-http.client :as http]
             [clojure.string :as str]))
 
