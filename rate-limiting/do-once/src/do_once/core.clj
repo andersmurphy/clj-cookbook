@@ -39,17 +39,17 @@ create table do_once (
   (jdbc/execute! ds ["
 create unique index do_once_unique ON do_once(uuid, name)"])
 
-  (do-once! "Nora" "test1"
-            (println "this will be done once")
+  (do-once! "Nora" "email-2020-02-08"
+            (println "email sent")
             (prn (+ 1 2 3 4)))
 
   (do-once-2! :uuid "Nora"
-              :name "test2"
-              :action (do (println "this will be done once")
+              :name "email-2020-02-09"
+              :action (do (println "email sent")
                           (prn (+ 1 2 3 4))))
 
   (do-once-3! {:uuid   "Nora"
-               :name   "test3"
+               :name   "email-2020-02-10"
                :action (fn []
-                         (println "this will be done once")
+                         (println "email sent")
                          (prn (+ 1 2 3 4)))}))
