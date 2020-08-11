@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+mkdir -p .cache
+cd .cache
+
+if [ ! -f clj-zprint ]; then
+  if [ "$(uname)" == "Darwin" ]; then
+    curl -LJO  "https://github.com/kkinnear/zprint/releases/download/1.0.0/zprintm-1.0.0"
+    mv zprintm-1.0.0 clj-zprint
+    chmod 755 clj-zprint
+  elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    curl -LJO "https://github.com/kkinnear/zprint/releases/download/1.0.0/zprintl-1.0.0"
+    mv zprintm-1.0.0 clj-zprint
+    chmod 755 clj-zprint
+  fi
+fi
+
+cd ..
+
+for file in $(git diff --cached --name-only | grep -E '\.(clj)$')
+do
+  .cache/clj-zprint "{:search-config? true}"  < "$file" > "$file.out"
+  mv "$file.out" "$file"
+  $(git add "$file")
+done

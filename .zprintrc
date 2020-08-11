@@ -1,0 +1,2 @@
+{:style [:community :justified]
+ :map {:comma? false}}
