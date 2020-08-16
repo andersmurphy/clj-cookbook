@@ -18,3 +18,5 @@ Setup:
 git config core.hooksPath git-hooks
 chmod +x git-hooks/pre-commit
 ```
+
+The accompanying blog post can be found [here](https://andersmurphy.com/2020/08/16/clojure-code-formatting-pre-commit-hook-with-zprint.html).
