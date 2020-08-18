@@ -7,3 +7,9 @@ The accompanying blog post can be found [here](https://andersmurphy.com/2020/08/
 Run the following command in the `brew-formulae` directory:
 
 `brew install --build-from-source clj-zprint.rb`
+
+## To uninstall clj-zprint
+
+Run the following command:
+
+`brew install clj-zprint`
