@@ -17,7 +17,7 @@ fi
 
 cd ..
 
-for file in $(git diff --cached --name-only | grep -E '\.(clj)$')
+for file in $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(clj)$')
 do
   .cache/clj-zprint "{:search-config? true}"  < "$file" > "$file.out"
   mv "$file.out" "$file"
