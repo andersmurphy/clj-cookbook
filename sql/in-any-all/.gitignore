@@ -1,0 +1,8 @@
+.DS_Store
+**/target
+**/classes
+*.jar
+*.class
+**/.lein-*
+**/.nrepl-port
+**.cpcache
