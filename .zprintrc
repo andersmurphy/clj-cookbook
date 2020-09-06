@@ -1,2 +1,2 @@
-{:style [:community :justified :respect-bl]]
+{:style [:community :justified :respect-bl]
  :map {:comma? false}}
