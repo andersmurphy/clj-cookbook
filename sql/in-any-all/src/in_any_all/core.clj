@@ -31,6 +31,7 @@
  (sql/insert! ds :user_info {:name "Alice"})
 
  (sql/query ds ["select * from user_info where name in(?, ?)" "Bob" "Jane"])
+ (sql/query ds ["select * from user_info where name not in(?, ?)" "Bob" "Jane"])
  (sql/query ds
             (let [names ["Bob" "Jane"]]
               (into [(str "select * from user_info where name in ("
