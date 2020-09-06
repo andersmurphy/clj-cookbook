@@ -1,6 +1,7 @@
 (ns in-any-all.core
   (:require [next.jdbc :as jdbc]
             [next.jdbc.sql :as sql]
+            [clojure.string :as str]
             [next.jdbc.prepare :as p])
   (:import [java.sql PreparedStatement]))
 
@@ -29,8 +30,13 @@
  (sql/insert! ds :user_info {:name "Megan"})
  (sql/insert! ds :user_info {:name "Alice"})
 
- (sql/query ds ["select * from user_info where name in(?, ?)" "Bob" "Jane"])
- (sql/query ds ["select * from user_info where name in(?, ?)" "Bob" "Jane"])
+ (sql/query ds ["select * from user_info where name in(?, ?)"])
+ (sql/query ds
+            (let [names ["Bob" "Jane"]]
+              (into [(str "select * from user_info where name in ("
+                          (str/join ", " (repeat (count names) "?"))
+                          ")")]
+                    names)))
 
  (sql/query ds
             ["select * from user_info where name = any(?)"
