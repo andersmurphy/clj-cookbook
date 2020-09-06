@@ -23,18 +23,24 @@
   ds
   ["create table user_info (pid serial primary key, name text not null)"])
  (jdbc/execute! ds ["create unique index user_info_unique ON user_info(name)"])
+
  (sql/insert! ds :user_info {:name "Bob"})
  (sql/insert! ds :user_info {:name "Jane"})
  (sql/insert! ds :user_info {:name "Megan"})
  (sql/insert! ds :user_info {:name "Alice"})
+
  (sql/query ds ["select * from user_info where name in(?, ?)" "Bob" "Jane"])
+ (sql/query ds ["select * from user_info where name in(?, ?)" "Bob" "Jane"])
+
  (sql/query ds
             ["select * from user_info where name = any(?)"
              (into-array String ["Bob" "Jane"])])
  (sql/query ds
             ["select * from user_info where name != all(?)"
              (into-array String ["Bob" "Jane"])])
+
  (sql/query ds ["select * from user_info where name = any(?)" ["Bob" "Jane"]])
  (sql/query ds ["select * from user_info where name != all(?)" ["Bob" "Jane"]])
+
  (sql/query ds ["select * from user_info where pid != all(?)" [1 2]])
  (sql/query ds ["select * from user_info where pid = any(?)" [1 2]]))
