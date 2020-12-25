@@ -3,7 +3,8 @@
             [hikari-cp.core :as cp]
             [clojure.string :as str]))
 
-(defn db-info-from-url [db-url]
+(defn db-info-from-url
+  [db-url]
   (let [db-uri              (java.net.URI. db-url)
         [username password] (str/split (or (.getUserInfo db-uri) ":") #":")]
     {:username      (or username (System/getProperty "user.name"))
@@ -21,22 +22,18 @@
           :validation-timeout 5000
           :idle-timeout       600000
           :max-lifetime       1800000
-          :minimum-idle       10
-          :maximum-pool-size  20
+          :minimum-idle       5
+          :maximum-pool-size  5
           :pool-name          "db-pool"
           :register-mbeans    false}))
 
-(defonce datasource
-  (delay (cp/make-datasource datasource-options)))
+(defonce datasource (delay (cp/make-datasource datasource-options)))
 
 (def database-connection {:datasource @datasource})
 
 (comment
-  (clojure.java.jdbc/execute!
-   database-connection
-   "CREATE TABLE user_info (pid SERIAL PRIMARY KEY, name text)")
+ (clojure.java.jdbc/execute!
+  database-connection
+  "CREATE TABLE user_info (pid SERIAL PRIMARY KEY, name text)")
 
-  (clojure.java.jdbc/insert!
-   database-connection
-   :user_info
-   {:name "anders"}))
+ (clojure.java.jdbc/insert! database-connection :user_info {:name "anders"}))
