@@ -1,6 +1,6 @@
 # clj-cookbook
 
-A collection of useful Clojure recipies (the sort of things you do once in the lifetime of a project and then forget how to do).
+A collection of useful Clojure recipes (the sort of things you do once in the lifetime of a project and then forget how to do).
 
 Meta level recipes will be documented here.
 
