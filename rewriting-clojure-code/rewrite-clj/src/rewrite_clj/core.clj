@@ -10,15 +10,14 @@
          keyword)))
 
 (defn camel-case-snake-case-keys [code]
-  (let [zip (z/of-string code)]
-    (loop [zloc zip]
-      (if (z/end? zloc)
-        (z/root-string zloc)
-        (let [zloc (z/next zloc)]
-          (if (and (= :token (z/tag zloc))
-                   (keyword? (z/sexpr zloc)))
-            (recur (z/edit zloc kebab-case->camelCase))
-            (recur zloc)))))))
+  (loop [zloc (z/of-string code)]
+    (if (z/end? zloc)
+      (z/root-string zloc)
+      (let [zloc (z/next zloc)]
+        (if (and (= :token (z/tag zloc))
+                 (keyword? (z/sexpr zloc)))
+          (recur (z/edit zloc kebab-case->camelCase))
+          (recur zloc))))))
 
 (defn get-clj-files
   [folder-path]
@@ -32,6 +31,5 @@
        (run! (fn [file] (->> (slurp file)
                              camel-case-snake-case-keys
                              (spit file))))))
-
-;; Handle names space keys
 ;; Add exclusion list
+;; Ignore namespaced keywords
