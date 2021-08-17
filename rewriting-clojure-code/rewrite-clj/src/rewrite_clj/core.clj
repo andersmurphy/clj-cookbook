@@ -17,9 +17,12 @@
       (-> (cond
             (and (= :token (z/tag zloc))
                  (and (keyword? (z/sexpr zloc))
-                      (namespace (z/sexpr zloc))
-                      (blacklisted-keys (z/sexpr zloc))))
+                      (or (namespace (z/sexpr zloc))
+                          (blacklisted-keys (z/sexpr zloc)))))
             zloc,
+            (and (= :list (z/tag zloc))
+                 ((set (z/sexpr zloc)) 'env))
+            (z/right zloc),
             (and (= :token (z/tag zloc))
                  (keyword? (z/sexpr zloc)))
             (z/edit zloc kebab-case->camelCase),
@@ -33,6 +36,7 @@
        file-seq
        (filter #(.isFile %))
        (filter #(str/ends-with? (str %) ".clj"))))
+
 
 (comment
   (->> (get-clj-files "/Users/andersmurphy/projects/clj-cookbook")
