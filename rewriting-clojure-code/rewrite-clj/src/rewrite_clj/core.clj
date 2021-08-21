@@ -10,25 +10,25 @@
          (apply str (first words))
          keyword)))
 
-(defn camel-case-snake-case-keys [blacklisted-keys code]
-  (loop [zloc (z/of-string code)]
-    (if (z/end? zloc)
-      (z/root-string zloc)
-      (-> (cond
-            (and (= :token (z/tag zloc))
-                 (and (keyword? (z/sexpr zloc))
-                      (or (namespace (z/sexpr zloc))
-                          (blacklisted-keys (z/sexpr zloc)))))
-            zloc,
-            (and (= :list (z/tag zloc))
-                 ((set (z/sexpr zloc)) 'env))
-            (z/right zloc),
-            (and (= :token (z/tag zloc))
-                 (keyword? (z/sexpr zloc)))
-            (z/edit zloc kebab-case->camelCase),
-            :else zloc)
-          z/next
-          recur))))
+(defn camel-case-snake-case-keys
+  [{:keys [ignored-forms ignored-keys]} code]
+  (let [ignored-forms (conj ignored-forms
+                            'camel-case-snake-case-keys)]
+    (loop [zloc (z/of-string code)]
+      (if (z/end? zloc)
+        (z/root-string zloc)
+        (-> (let [sexpr (z/sexpr zloc)]
+              (cond
+                (and (list? sexpr)
+                     (get ignored-forms (first sexpr)))
+                (z/right zloc),
+                (and (keyword? sexpr)
+                     (not (namespace sexpr))
+                     (not (get ignored-keys sexpr)))
+                (-> (z/edit zloc kebab-case->camelCase)
+                    z/next),
+                :else (z/next zloc)))
+            recur)))))
 
 (defn get-clj-files
   [folder-path]
@@ -37,19 +37,22 @@
        (filter #(.isFile %))
        (filter #(str/ends-with? (str %) ".clj"))))
 
-
 (comment
   (->> (get-clj-files "/Users/andersmurphy/projects/clj-cookbook")
-       (run! (fn [file] (->> (slurp file)
-                             (camel-case-snake-case-keys
-                              #{:content-type
-                                :form-params})
-                             (spit file))))))
+       (run! (fn [file]
+               (->> (slurp file)
+                    (camel-case-snake-case-keys
+                     {:ignored-keys
+                      #{:content-type
+                        :form-params}
+                      :ignored-forms
+                      #{'env}})
+                    (spit file))))))
 
 (comment
   (env :foo-bar)
-  (:fooBar env)
-  (env :foo-bar :bar-var)
-  (-> :fooCar))
+  (env :foo-bar)
+  (env :foo-var :bar-var)
+  (-> :foo-car))
 
 ;; Exclude files
