@@ -21,7 +21,7 @@
               (cond
                 (and (list? sexpr)
                      (get ignored-forms (first sexpr)))
-                (z/right zloc),
+                (-> zloc z/down z/rightmost z/next),
                 (and (keyword? sexpr)
                      (not (namespace sexpr))
                      (not (get ignored-keys sexpr)))
