@@ -10,6 +10,12 @@
          (apply str (first words))
          keyword)))
 
+(defn skip-form [zloc]
+  (or (z/right zloc)
+      (if-not (z/up zloc)
+        [(z/node zloc) :end]
+        (recur (z/up zloc)))))
+
 (defn camel-case-snake-case-keys
   [{:keys [ignored-forms ignored-keys]} code]
   (let [ignored-forms (conj ignored-forms
@@ -19,9 +25,9 @@
         (z/root-string zloc)
         (-> (let [sexpr (z/sexpr zloc)]
               (cond
-                (and (list? sexpr)
+                (and (or (list? sexpr) (vector? sexpr))
                      (get ignored-forms (first sexpr)))
-                (-> zloc z/down z/rightmost z/next),
+                (skip-form zloc),
                 (and (keyword? sexpr)
                      (not (namespace sexpr))
                      (not (get ignored-keys sexpr)))
@@ -51,8 +57,11 @@
 
 (comment
   (env :foo-bar)
+  (foo (env {:foo-bar 23})
+       (env {:foo-bar 23}))
   (env :foo-bar)
   (env :foo-var :bar-var)
-  (-> :foo-car))
+  (-> :foo-car)
+  (env :foo-var))
 
 ;; Exclude files
