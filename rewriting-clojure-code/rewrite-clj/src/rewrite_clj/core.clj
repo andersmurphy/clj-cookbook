@@ -26,7 +26,8 @@
         (-> (let [sexpr (z/sexpr zloc)]
               (cond
                 (and (or (list? sexpr) (vector? sexpr))
-                     (get ignored-forms (first sexpr)))
+                     (or (get ignored-forms (first sexpr))
+                         (get ignored-forms (second sexpr))))
                 (skip-form zloc),
                 (and (keyword? sexpr)
                      (not (namespace sexpr))
@@ -56,6 +57,8 @@
                     (spit file))))))
 
 (comment
+  (defn env []
+    {:foo-bar 23})
   (env :foo-bar)
   (foo (env {:foo-bar 23})
        (env {:foo-bar 23}))
