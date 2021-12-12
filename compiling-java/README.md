@@ -1,6 +1,8 @@
-## To compile the java source
+# Compiling java source with tools.build
 
 The accompanying blog post can be found [here](https://andersmurphy.com/2021/12/12/clojure-compiling-java-source-with-tools-build.html).
+
+## To compile the java source
 
 ```
 clj -T:build jcompile

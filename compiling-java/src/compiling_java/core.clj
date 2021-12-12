@@ -1,5 +1,5 @@
 (ns compiling-java.core
-  (:gen-class)
+    (:gen-class)
   (:import [greatings Greater]))
 
 (defn -main []
