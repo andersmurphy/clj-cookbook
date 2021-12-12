@@ -1,8 +1,9 @@
 {:paths ["src"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
  :aliases
- {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.6.8"
-                                                :git/sha "d79ae84"}}
+ {:build {:deps {io.github.clojure/tools.build
+                 {:git/tag "v0.6.8"
+                  :git/sha "d79ae84"}}
           :ns-default build}
   :dev {;; So that we have access to java classes at the repl
         :paths ["src" "target/classes"]}}}
