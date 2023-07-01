@@ -2,7 +2,6 @@
   (:require
    [next.jdbc :as jdbc])
   (:import
-   (sqlite.db HelloWorld)
    (org.sqlite Function)))
 
 (def data-source-properties
@@ -23,6 +22,8 @@
    :foreign_keys          true})
 
 (comment
+  (compile 'sqlite.db.HelloWorld)
+  (compile 'sqlite.db.RegexCapture)
   
   (let [my-datasource (jdbc/get-datasource
                         (merge
@@ -32,9 +33,22 @@
       (Function/create
         conn
         "hello_world"
-        (HelloWorld.))
-      (jdbc/execute! conn ["select hello_world()"])
-      ))
+        (sqlite.db.HelloWorld.))
+      (jdbc/execute! conn ["select hello_world()"])))
+
+  (let [my-datasource (jdbc/get-datasource
+                        (merge
+                          data-source-properties
+                          {:jdbcUrl "jdbc:sqlite:db/database.db"}))]
+    (with-open [conn (jdbc/get-connection my-datasource)]
+      (Function/create
+        conn
+        "regex_capture"
+        (sqlite.db.RegexCapture.))
+      (jdbc/execute! conn
+        ["select regex_capture(?, 'Hello, world!')"
+         ", (world)!"])))
+  
   )
 
 

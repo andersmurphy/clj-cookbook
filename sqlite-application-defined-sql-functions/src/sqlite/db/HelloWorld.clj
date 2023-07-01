@@ -1,8 +1,7 @@
 (ns sqlite.db.HelloWorld
   (:gen-class
    :extends org.sqlite.Function
-   :exposes-methods {result superResult})
-  (:import org.sqlite.Function))
+   :exposes-methods {result superResult}))
 
 (defn -xFunc [this]
-  (println "hello world"))
+  (.superResult this "hello, world!"))
