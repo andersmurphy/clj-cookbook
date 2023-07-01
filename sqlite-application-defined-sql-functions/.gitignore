@@ -1,0 +1,7 @@
+.lsp
+.DS_Store
+.cpcache
+.clj-kondo/*
+.env.edn
+!.clj-kondo/config.edn
+db/database.*
