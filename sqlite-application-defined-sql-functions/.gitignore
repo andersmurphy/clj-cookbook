@@ -5,3 +5,4 @@
 .env.edn
 !.clj-kondo/config.edn
 db/database.*
+!classes
