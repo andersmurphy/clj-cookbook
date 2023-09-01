@@ -1,0 +1,9 @@
+{:paths   ["src"]
+ :deps
+ {org.clojure/clojure            {:mvn/version "1.11.1"}
+  metosin/muuntaja               {:mvn/version "0.6.8"}
+  metosin/reitit                 {:mvn/version "0.7.0-alpha5"}
+  ring/ring-core                 {:mvn/version "1.10.0"}
+  info.sunng/ring-jetty9-adapter {:mvn/version "0.30.0"}
+  com.lambdaisland/hiccup        {:mvn/version "0.0.4"}}
+ :aliases {:dev {:jvm-opts ["-Duser.timezone=UTC" "--enable-preview"]}}}
