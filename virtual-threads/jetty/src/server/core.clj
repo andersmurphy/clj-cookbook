@@ -6,7 +6,7 @@
             [reitit.ring.coercion :as rrc]
             [reitit.ring.middleware.muuntaja :as muuntaja]
             [reitit.ring.middleware.parameters :as parameters]
-            [ring.adapter.jetty9 :refer [run-jetty]]
+            [ring.adapter.jetty :refer [run-jetty]]
             [reitit.coercion.malli :as malli]
             [lambdaisland.hiccup :as h])
   (:import (java.util.concurrent Executors)
