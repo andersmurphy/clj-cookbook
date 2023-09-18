@@ -38,7 +38,8 @@
                  :worker-pool (Executors/newVirtualThreadPerTaskExecutor)}))
 
   (def server (hk-server/run-server #'app
-                {:port 8080}))
+                {:port 8080
+                 :thread 50}))
   ;; stop server
   (server))
 
@@ -56,11 +57,10 @@
 ;; Requests/sec:  85202.97
 ;; Transfer/sec:     12.03MB
 
-;; No virtual threads each handler has a 50ms thread sleep
 ;; Running 10s test @ http://127.0.0.1:8080/hello
 ;;   12 threads and 120 connections
-;; Requests/sec:     76.00
-;; Transfer/sec:     10.98KB
+;; Requests/sec:    928.14
+;; Transfer/sec:    134.15KB
 
 ;; Virtual threads each handler has a 50ms thread sleep
 ;; Running 10s test @ http://127.0.0.1:8080/hello
@@ -68,4 +68,4 @@
 ;; Requests/sec:   2208.67
 ;; Transfer/sec:    319.22KB
 
-;; 29x
+;; 2.3x
