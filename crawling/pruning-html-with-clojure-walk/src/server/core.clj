@@ -30,16 +30,17 @@
    [:not [:or :keyword :string [:vector :any] :map]]])
 
 (def tags-to-unwrap
-  [:cat [:fn #{:div :span :article :main}] :any [:or [:* :any] :string]])
+  [:or [:cat [:fn #{:div :span :article :main}]
+        :any [:or [:* :any] :string]]
+   [:cat [:vector :any]]])
 
 (defn remove-tags [tags hiccup]
   (let [remove-tag? (m/validator (tags-to-remove tags))
         unwrap-tag? (m/validator tags-to-unwrap)]
     (-> (walk/postwalk
-          #(cond (and (sequential? %) (not (map-entry? %)))
-                 (let [[_ _ f-child :as el]
-                       (into [] (remove remove-tag?) %)]
-                   (if (unwrap-tag? el) f-child el))
+          #(cond (and (vector? %) (not (map-entry? %)))
+                 (let [el (into [] (remove remove-tag?) %)]
+                   (if (unwrap-tag? el) (peek el) el))
                  (map? %) (dissoc % :class :id :style :dir
                             :aria-label)
                  :else    %)
