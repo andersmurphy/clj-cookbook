@@ -37,14 +37,14 @@
 (defn remove-tags [tags hiccup]
   (let [remove-tag? (m/validator (tags-to-remove tags))
         unwrap-tag? (m/validator tags-to-unwrap)]
-    (-> (walk/postwalk
-          #(cond (and (vector? %) (not (map-entry? %)))
-                 (let [el (into [] (remove remove-tag?) %)]
-                   (if (unwrap-tag? el) (peek el) el))
-                 (map? %) (dissoc % :class :id :style :dir
-                            :aria-label)
-                 :else    %)
-          hiccup))))
+    (walk/postwalk
+      #(cond (and (vector? %) (not (map-entry? %)))
+             (let [el (into [] (remove remove-tag?) %)]
+               (if (unwrap-tag? el) (peek el) el))
+             (map? %) (dissoc % :class :id :style :dir
+                        :aria-label)
+             :else    %)
+      (vec hiccup))))
 
 (comment
   (def html-data
