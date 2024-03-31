@@ -1,7 +1,6 @@
 (ns server.core
   (:require [clojure.walk :as walk]
             [malli.core :as m]
-            [clojure.string :as str]
             [hickory.core :as hick]
             [lambdaisland.regal :refer [regex]]))
 
@@ -12,15 +11,23 @@
       (filterv (fn [[t :as el]] (when (tags t) el)))
       peek)))
 
-(def comment-regex ;; #"<!--.*-->"
-  (regex [:cat "<!--" [:* :any] "-->"]))
+(def blank-re
+  ;; Malli uses re-find not re-matches so we need to specify start/end
+  ;; or we will match on strings that contain whitespace and other content.
+  ;; See: https://github.com/metosin/malli/issues/862
+  [:cat :start [:* :whitespace] :end])
+(def comment-re  [:cat "<!--" [:* :any] "-->"])
+(def doc-type-re "<!DOCTYPE html>")
+
+(def strings-to-remove
+  (regex [:alt blank-re comment-re doc-type-re]))
 
 (defn tags-to-remove [tags]
   [:or
    [:cat [:fn tags] [:* :any]]
    [:cat [:not [:fn #{:br}]] :any]
-   [:and :string [:or [:fn str/blank?] [:re comment-regex]]]
-   [:fn (fn [x] (= org.jsoup.nodes.TextNode (type x)))]])
+   [:and :string [:re strings-to-remove]]
+   [:not [:or :keyword :string [:vector :any] :map]]])
 
 (def tags-to-unwrap
   [:cat [:fn #{:div :span :article :main}] :any [:or [:* :any] :string]])
