@@ -41,8 +41,7 @@
       #(cond (and (vector? %) (not (map-entry? %)))
              (let [el (into [] (remove remove-tag?) %)]
                (if (unwrap-tag? el) (peek el) el))
-             (map? %) (dissoc % :class :id :style :dir
-                        :aria-label)
+             (map? %) (select-keys % [:href])
              :else    %)
       (vec hiccup))))
 
