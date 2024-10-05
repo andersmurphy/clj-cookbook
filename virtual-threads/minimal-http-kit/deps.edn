@@ -1,0 +1,4 @@
+{:paths   ["src"]
+ :deps    {org.clojure/clojure {:mvn/version "1.12.0"}
+           http-kit/http-kit   {:mvn/version "2.8.0"}}
+ :aliases {}}
