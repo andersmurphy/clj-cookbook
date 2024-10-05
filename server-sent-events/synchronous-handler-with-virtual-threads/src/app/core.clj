@@ -28,14 +28,14 @@
         ;; Close channel after client disconnect.
         (finally (a/close! ch))))))
 
-(defonce clients (atom {}))
+(defonce clients (atom #{}))
 
 (defn format-event [body]
   (str "data: " body "\n\n"))
 
 (defn send>!! [ch message]
   (let [v (a/>!! ch message)]
-    (when-not v (swap! clients dissoc ch))
+    (when-not v (swap! clients disj ch))
     ;; Keeps the return semantics of >!!
     v))
 
@@ -48,7 +48,7 @@
 
 (defn handler-sse [_]
   (let [ch (a/chan 10)]
-    (swap! clients conj {ch (random-uuid)})
+    (swap! clients conj ch)
     (send>!! ch (format-event "Successfully connected"))
     ;; Every 10 seconds we send a heartbeat to check if output stream
     ;; is still open.
@@ -59,7 +59,7 @@
      :body    ch}))
 
 (defn broadcast-message-to-connected-clients! [message]
-  (run! (fn [[ch _]] (send>!! ch (format-event message))) @clients))
+  (run! (fn [ch] (send>!! ch (format-event message))) @clients))
 
 (def app
   (fn handler [{:keys [request-method uri] :as req}]
