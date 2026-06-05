@@ -1,0 +1,15 @@
+{:paths   ["src" "resources"]
+ :deps    {org.clojure/clojure                      {:mvn/version "1.12.2"}
+           com.clojure-goes-fast/clj-async-profiler {:mvn/version "2.0.0-beta1"}
+           io.github.robsonkades/uuidv7             {:mvn/version "1.0.1"}
+           andersmurphy/sqlite4clj
+           {:git/url "https://github.com/andersmurphy/sqlite4clj"
+            :git/sha "2f3db153cf881049f84bc45731e7a30c3d9e3e3d"}}
+ :aliases {:dev {:jvm-opts
+                 ["--enable-native-access=ALL-UNNAMED"
+                  "-Duser.timezone=UTC"
+                  "-XX:+UseZGC"
+                  "-XX:+ZGenerational"
+                  "-XX:+UseCompactObjectHeaders"
+                  "-Djdk.attach.allowAttachSelf"
+                  "-XX:+EnableDynamicAgentLoading"]}}}
