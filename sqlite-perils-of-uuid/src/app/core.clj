@@ -37,12 +37,14 @@
              :message "Clojure <3 Datastar!"}))
 
 (comment
+
+  (count data)
   (do
     (d/q writer
       ["DROP TABLE IF EXISTS event"])
     (d/q writer ["PRAGMA wal_checkpoint(TRUNCATE)"])
     (d/q writer
-      ["CREATE TABLE IF NOT EXISTS event(id INT PRIMARY KEY, data BLOB)"]))
+      ["CREATE TABLE IF NOT EXISTS event(id INTEGER PRIMARY KEY, data BLOB)"]))
   
   (dotimes [_ 10]
     (time
@@ -92,7 +94,24 @@
 
   )
 
+(comment
+  (do
+    (d/q writer
+      ["DROP TABLE IF EXISTS event"])
+    (d/q writer ["PRAGMA wal_checkpoint(TRUNCATE)"])
+    (d/q writer
+      ["CREATE TABLE IF NOT EXISTS event(id BLOB PRIMARY KEY, data BLOB)"]))
 
+  (dotimes [_ 10]
+    (time
+      (d/with-write-tx [db writer]
+        (dotimes [_ 1000000]
+          (d/q db ["INSERT INTO event (id, data) values (?, ?)"
+                   (random-uuid4-bytes) data])))))
+
+  (d/q (:reader db) ["SELECT count(*) from event"])
+
+  )
 
 (comment ;; Profiling
 
