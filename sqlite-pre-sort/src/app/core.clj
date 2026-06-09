@@ -1,7 +1,6 @@
 (ns app.core
   (:require [sqlite4clj.core :as d]
-            [clj-async-profiler.core :as prof]
-            [clojure.edn :as edn])
+            [clj-async-profiler.core :as prof])
   (:import (java.security SecureRandom)
            (java.nio ByteBuffer)))
 
@@ -29,9 +28,8 @@
     buffer))
 
 (defn bytes->long [^bytes bytes]
-  (let [bb (ByteBuffer/allocate (count bytes))]
-    (ByteBuffer/.put bb bytes)
-    (ByteBuffer/.getLong bb 0)))
+  (-> (ByteBuffer/wrap bytes 0 8)
+    (ByteBuffer/.getLong 0)))
 
 (defn byte-compare
   "Compares the first 8 most significant bytes of a byte array.
@@ -40,9 +38,6 @@
   (Long/compareUnsigned
     (bytes->long a)
     (bytes->long b)))
-
-(comment
-  (type (bytes->long (random-unguessable-id))))
 
 (comment ;; random id without pre-sort
   (do
